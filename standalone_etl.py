@@ -10,6 +10,8 @@ import logging
 import logging
 import time
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Configure logging
 logging.basicConfig(
@@ -22,14 +24,14 @@ logging.basicConfig(
 )
 
 def get_sql_connection():
-    """Create SQL Server connection"""
+    """Create SQL Server connection (credentials from environment / .env)"""
     try:
         conn = pymssql.connect(
-            server='localhost',
-            port=1433,
-            database='PTXYZ_DataWarehouse',
-            user='sa',
-            password='PTXYZSecure123!',
+            server=os.getenv('MSSQL_HOST', 'localhost'),
+            port=int(os.getenv('MSSQL_PORT', '1433')),
+            database=os.getenv('MSSQL_DB', 'PTXYZ_DataWarehouse'),
+            user=os.getenv('MSSQL_USER', 'sa'),
+            password=os.environ['MSSQL_SA_PASSWORD'],
             timeout=30
         )
         return conn
