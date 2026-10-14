@@ -23,3 +23,9 @@ if ($LASTEXITCODE -ne 0) { throw "ETL gagal" }
 
 # 5. Validasi
 docker compose exec sqlserver bash -c "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \`"`$MSSQL_SA_PASSWORD\`" -C -N -d PTXYZ_DataWarehouse -i /tests/validate.sql"
+
+# 6. LocalStack (S3, Lambda, EventBridge)
+docker compose up -d localstack
+python -m pip install -q boto3
+python scripts\setup_localstack.py
+if ($LASTEXITCODE -ne 0) { throw "Setup LocalStack gagal" }
